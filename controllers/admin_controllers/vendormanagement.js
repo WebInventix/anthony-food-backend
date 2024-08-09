@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 const { Vendors } = require("../../models/vendors");
-const { Stores } = require("../../models/stores");
-const { Products } = require("../../models/products");
 
 
 const addVendor = async (req,res) => {
@@ -23,6 +21,43 @@ const addVendor = async (req,res) => {
     }
 }
 
+
+const getVendor = async (req,res) => {
+    const {params} = req;
+    const {id} = params;
+    try {
+        const vendor = await Vendors.find({store_id:id,status:{ $ne: 'Deleted' }}).populate('store_id').populate('category').populate('allproducts')
+        res.status(200).json({message:'Vendor Fetched Successfully',vendor})
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+        
+    }
+}
+
+
+const deleteVendor = async (req,res) => {
+    const {params} = req;
+    const {id} = params;
+    try {
+        let vendor = await Vendors.findById(id)
+        if (!vendor) {
+            return res.status(404).json({ message: "Vendor Not Found" });
+            }
+        vendor.status='Deleted';
+        await vendor.save()
+        res.status(200).json({message:'Vendor Deleted Successfully',vendor})
+
+
+        
+    } catch (error) {
+        
+        res.status(500).json({message:error.message})
+    }
+
+}
 module.exports = {
-    addVendor
+    addVendor,
+    getVendor,
+    deleteVendor
 };

@@ -34,9 +34,10 @@ const User_Auth_Schema = mongoose.model('user', new Schema({
     },
     approved_status: {
         type: String,
-        enum:['Approved','Requested','Decline'],
+        enum:['Approved','Requested','Decline','Deleted'],
         required:true
-    }
+    },
+
 
 
           
