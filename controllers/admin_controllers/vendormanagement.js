@@ -13,10 +13,10 @@ const addVendor = async (req,res) => {
 
         const vendor = new Vendors({name,email,phonenumber,avatar,store_id,category,status:'Active',allproducts})
         await vendor.save()
-        res.status(200).json({message:'Vendor Added Successfully',vendor})
+        return res.status(200).json({message:'Vendor Added Successfully',vendor})
         
     } catch (error) {
-        res.status(500).json({message:error.message})
+        return res.status(500).json({message:error.message})
         
     }
 }
@@ -27,10 +27,10 @@ const getVendor = async (req,res) => {
     const {id} = params;
     try {
         const vendor = await Vendors.find({store_id:id,status:{ $ne: 'Deleted' }}).populate('store_id').populate('category').populate('allproducts')
-        res.status(200).json({message:'Vendor Fetched Successfully',vendor})
+        return res.status(200).json({message:'Vendor Fetched Successfully',vendor})
         
     } catch (error) {
-        res.status(500).json({message:error.message})
+        return res.status(500).json({message:error.message})
         
     }
 }
@@ -46,13 +46,13 @@ const deleteVendor = async (req,res) => {
             }
         vendor.status='Deleted';
         await vendor.save()
-        res.status(200).json({message:'Vendor Deleted Successfully',vendor})
+        return res.status(200).json({message:'Vendor Deleted Successfully',vendor})
 
 
         
     } catch (error) {
         
-        res.status(500).json({message:error.message})
+        return res.status(500).json({message:error.message})
     }
 
 }
