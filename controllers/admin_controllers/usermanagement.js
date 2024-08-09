@@ -48,7 +48,7 @@ const addUser = async (req,res) => {
         return res.json({message:"User created successfully",data:save_user})
     }
     catch (error) {
-        res.status(500).json({message:error.message})
+        return res.status(500).json({message:error.message})
         
     }
 }
@@ -63,13 +63,13 @@ const deleteUser = async (req,res)=>{
             }
             nuser.approved_status='Deleted';
         await nuser.save()
-        res.status(200).json({message:'User Deleted Successfully',nuser})
+        return res.status(200).json({message:'User Deleted Successfully',nuser})
 
 
         
     } catch (error) {
         
-        res.status(500).json({message:error.message})
+        return res.status(500).json({message:error.message})
     }
 }
 
@@ -78,10 +78,11 @@ const requestedUser = async (req,res) => {
     const {id} = params;
     try {
         let nuser = await User_Auth_Schema.find({store_id:id,approved_status:'Requested'})
-        res.status(200).json({message:'Requested Users by Store',nuser})
+        return res.status(200).json({message:'Requested Users by Store',nuser})
 
         
     } catch (error) {
+        return res.status(500).json({message:error.message})
         
     }
 }
@@ -92,16 +93,8 @@ const getUser = async (req,res)=> {
     try {
         console.log(store,"try")
         let nuser = await User_Auth_Schema.find({store_id:store,approved_status:{ $ne: 'Deleted' }})
-        if(nuser.length>0)
-        {
-            res.status(200).json({message:'User Found',users:nuser})
+        return res.status(200).json({message:'User Found',users:nuser})
 
-        }
-        else
-        {
-            res.status(404).json({message:'User Not Found',users:[]})
-        }
-        res.status(200).json({message:'Users by Store',users:[]})
         
     } catch (error) {
         res.status(500).json({message:error.message})
