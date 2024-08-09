@@ -1,12 +1,13 @@
 const { User_Auth_Schema } = require("../../models/user_auth_model");
-
-
+const { Orders } = require("../../models/orders");
+const { Products } = require("../../models/products");
+ 
 const updateProfile = async (req,res) => {
     const {body, user_id} = req
-    const {first_name,last_name,phonenumber,prefences,avatar,lattitude,longitude,city} = body
+    const {name,email,phonenumber,store_id,avatar} = body
     try 
     {
-        let newData = {first_name,last_name,phonenumber,prefences,avatar,lattitude,longitude,city}
+        let newData = {name,email,store_id,phonenumber,avatar}
         const updatedata = {...newData}
         const update = await User_Auth_Schema.findByIdAndUpdate(user_id,
             {$set:updatedata},
@@ -24,9 +25,51 @@ const updateProfile = async (req,res) => {
     
 } 
 
+const orderRequest = async (req,res) => {
+    const {body, user_id} = req
+    const {product_id,quantity,date,delivery_type} = body
+    try {
+        const product = await Products.findById(product_id)
+        if(!product)
+            {
+                return res.status(404).json({ message: "Product not found" });
+            }
+        const store_id = product.store_id
+        const order = await Orders.create({store_id,product_id,quantity,date,delivery_type,user_id,status:'In-Process'})
+        res.status(200).json({message: "Order Requested Successfully", data: order})
+        
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+        
+    }
+}
 
+const getOrders = async (req,res) => {
+    const { body,user_id } = req
+    try {
+        console.log(user_id)
+        const orders = await Orders.find({ user_id:user_id}).populate('store_id').populate('product_id').populate('vendor_id')
+        let data={allorders:orders,vegetables:[],fruits:[]};
+        orders.map((or)=>{
+            if(or.product_id.category === 'Vegetables'){
+                data.vegetables.push(or)
+            }
+            else
+            {
+                data.fruits.push(or)
 
+            }
+        })
+        return res.status(200).json({message: "Orders Retrieved Successfully", data: data})
+        
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+        
+    }
+}
 module.exports = {
     updateProfile,
+    orderRequest,
+    getOrders
 
 };
