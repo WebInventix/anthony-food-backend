@@ -35,7 +35,7 @@ const Vendors = mongoose.model('vendors', new Schema({
     }],
     status: {
         type: String,
-        enum:['Active','In-Active'],
+        enum:['Active','In-Active','Deleted'],
         required:true
     }
 
