@@ -33,7 +33,7 @@ const sendverficationCode = async (to, code) => {
     const mailOptions = {
       from: process.env.MAIL_USERNAME,
       to,
-      subject: 'Welcome to Our Service',
+      subject: 'Password Reset Req',
       text: `Your OTP Verfication Code is ${code}`,
     };
   

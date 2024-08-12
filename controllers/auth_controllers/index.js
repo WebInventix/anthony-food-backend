@@ -231,6 +231,7 @@ const reset_user_password_request = async (req, res, next) => {
       success: true,
       message: "Email successfully sent with verification OTP!",
       data: email,
+      otp:OTP
     });
   } catch (error) {
     return next(error);
