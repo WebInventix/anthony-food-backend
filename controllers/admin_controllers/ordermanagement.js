@@ -33,7 +33,7 @@ const viewOrders = async (req,res)=> {
     const {order} = params;
     try {
         console.log(order)
-        const viewOrder = await Orders.findById(order).populate('product_id').populate('store_id').populate('vendor_id')
+        const viewOrder = await Orders.findById(order).populate('product_id').populate('store_id').populate('vendor_id').populate('user_id')
         if(!viewOrder)
         {
             return res.status(404).json({message:"Order not found"})
