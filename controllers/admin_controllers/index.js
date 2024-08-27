@@ -3,7 +3,35 @@ const crypto = require('crypto');
 const { Stores } = require("../../models/stores");
 const { User_Auth_Schema } = require("../../models/user_auth_model");
 const { Products } = require("../../models/products");
+const { Orders } = require("../../models/orders");
 
+
+const adminDashboard = async (req,res) => {
+    const { params } = req;
+    const { store_id } = params;
+    try {
+        let orders,recentUser;
+        if(store_id)
+        {
+            orders = await Orders.find({ store_id: store_id })
+            .populate("store_id")
+            .populate('user_id')
+            .sort({ _id: -1 });
+
+            recentUser = await User_Auth_Schema.findOne({store_id: store_id,approved_status:'Requested'})
+            .sort({_id:-1})
+        }
+        let data = {orders:orders,user:recentUser}
+        
+        return res.status(200).json({message:"Dashboard",data})
+        
+    } catch (error) {
+        return res.status(500).json({message:"Error",error:error.message})
+        
+    }
+
+
+}
 
 const generateUniquePid = () => {
     const uniqueId = crypto.randomBytes(3).toString('hex'); // Generates a random 6-character hex string
@@ -209,5 +237,6 @@ module.exports = {
     editProduct,
     getProducts,
     singleProduct,
-    deleteProduct
+    deleteProduct,
+    adminDashboard
 };
