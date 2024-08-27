@@ -1,5 +1,5 @@
 const express = require("express");
-const { addStore,approveUser,addProducts,editProduct, getProducts,singleProduct, deleteProduct } = require('../../controllers/admin_controllers/index');
+const { adminDashboard,addStore,approveUser,addProducts,editProduct, getProducts,singleProduct, deleteProduct } = require('../../controllers/admin_controllers/index');
 const { addVendor,getVendor,deleteVendor } = require('../../controllers/admin_controllers/vendormanagement')
 const { addUser, deleteUser, requestedUser, getUser } = require('../../controllers/admin_controllers/usermanagement')
 const { orderRequest , getOrders, updateProfile} = require('../../controllers/user_controllers')
@@ -33,5 +33,6 @@ router.get('/get-admin-orders/:store',getAdminOrders)
 router.get('/get-admin-orders/:store/:vendor',getAdminOrders)
 router.get('/view-order/:order',viewOrders)
 router.post('/update-order', updateOrder)
+router.get('/admin-dashboard/:store_id', adminDashboard)
 
 module.exports = router;
