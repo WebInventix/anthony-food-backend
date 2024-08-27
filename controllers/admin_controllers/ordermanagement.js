@@ -10,15 +10,15 @@ const getAdminOrders = async (req,res) => {
     var orders;
     if(store && vendor)
     {
-        orders = await Orders.find({store_id:store, vendor_id:vendor}).populate('product_id').populate('user_id')
+        orders = await Orders.find({store_id:store, vendor_id:vendor}).populate('product_id').populate('user_id').populate('vendor_id')
     }
     else if(store && !vendor)
     {
-        orders = await Orders.find({store_id:store}).populate('product_id').populate('user_id')
+        orders = await Orders.find({store_id:store}).populate('product_id').populate('user_id').populate('vendor_id')
     }
     else
     {
-        orders = await Orders.find().populate('product_id').populate('user_id')
+        orders = await Orders.find().populate('product_id').populate('user_id').populate('vendor_id')
     }
     return res.status(200).json({message:'All Orders',orders:orders})
     
