@@ -192,7 +192,7 @@ const login_user = async (req, res, next) => {
 const check_auth_controller = async (req, res, next) => {
   const { body, user_data, user_id, token_id } = req;
   try {
-    const nuser = await User_Auth_Schema.findOne({ _id: user_id }).select('-password');
+    const nuser = await User_Auth_Schema.findOne({ _id: user_id }).select('-password').populate('store_id');
     if(!nuser)
     {
       return res.status(200).json({ success: false, message: 'No User Found' });
