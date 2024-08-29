@@ -135,7 +135,7 @@ const login_user = async (req, res, next) => {
     if (validation_error) {
       return next(validation_error);
     }
-    const find_user = await User_Auth_Schema.findOne({ email });
+    const find_user = await User_Auth_Schema.findOne({ email }).populate('store_id').select('-password');
     if (!find_user) {
       const error = {
         status: 401,
@@ -173,7 +173,7 @@ const login_user = async (req, res, next) => {
 
     });
     const obj = {
-      ...user_dto
+      ...find_user
 
     };
 
