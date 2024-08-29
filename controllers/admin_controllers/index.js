@@ -16,6 +16,7 @@ const adminDashboard = async (req,res) => {
             orders = await Orders.find({ store_id: store_id })
             .populate("store_id")
             .populate('user_id')
+            .populate('product_id')
             .sort({ _id: -1 });
 
             recentUser = await User_Auth_Schema.findOne({store_id: store_id,approved_status:'Requested'})
