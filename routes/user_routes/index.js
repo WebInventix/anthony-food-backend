@@ -2,7 +2,7 @@ const express = require("express");
 const { adminDashboard,addStore,approveUser,addProducts,editProduct, getProducts,singleProduct, deleteProduct } = require('../../controllers/admin_controllers/index');
 const { addVendor,getVendor,deleteVendor } = require('../../controllers/admin_controllers/vendormanagement')
 const { addUser, deleteUser, requestedUser, getUser } = require('../../controllers/admin_controllers/usermanagement')
-const { orderRequest , getOrders, updateProfile} = require('../../controllers/user_controllers')
+const { orderRequest , getOrders, updateProfile,getAdmin} = require('../../controllers/user_controllers')
 const { getAdminOrders, viewOrders, updateOrder } = require('../../controllers/admin_controllers/ordermanagement')
 const router = express.Router();
 
@@ -34,5 +34,6 @@ router.get('/get-admin-orders/:store/:vendor',getAdminOrders)
 router.get('/view-order/:order',viewOrders)
 router.post('/update-order', updateOrder)
 router.get('/admin-dashboard/:store_id', adminDashboard)
+router.get('/get-admin', getAdmin)
 
 module.exports = router;
