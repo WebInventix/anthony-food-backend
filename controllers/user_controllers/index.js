@@ -70,7 +70,9 @@ const getOrders = async (req,res) => {
 
 const getAdmin = async (req,res) => {
     const admin = await User_Auth_Schema.findOne({role:'Admin'}).select('-password')
-    return res.status(200).json({message: "Admin Retrieved Successfully", data: admin})
+    let data=[]
+    data[0] = admin
+    return res.status(200).json({message: "Admin Retrieved Successfully", data: data})
 }
 module.exports = {
     updateProfile,
