@@ -105,7 +105,7 @@ const getUser = async (req,res)=> {
 const getChatUser = async (req,res) => {
     const {params} = req;
     try {
-        let nuser = await User_Auth_Schema.find({approved_status:'Approved'})
+        let nuser = await User_Auth_Schema.find({eole:'User',approved_status:'Approved'})
         return res.status(200).json({message:'User Found',users:nuser})
     } catch (error) {
         return res.status(500).json({message:error.message})
