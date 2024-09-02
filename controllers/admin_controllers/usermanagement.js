@@ -91,7 +91,7 @@ const getUser = async (req,res)=> {
     const{store} = params
     console.log(store)
     try {
-        console.log(store,"try")
+    
         let nuser = await User_Auth_Schema.find({store_id:store,approved_status:{ $ne: 'Deleted' }})
         return res.status(200).json({message:'User Found',users:nuser})
 
@@ -101,9 +101,21 @@ const getUser = async (req,res)=> {
         
     }
 }
+
+const getChatUser = async (req,res) => {
+    const {params} = req;
+    try {
+        let nuser = await User_Auth_Schema.find({approved_status:'Approved'})
+        return res.status(200).json({message:'User Found',users:nuser})
+    } catch (error) {
+        return res.status(500).json({message:error.message})
+        
+    }
+}
 module.exports = {
     addUser,
     deleteUser,
     requestedUser,
-    getUser
+    getUser,
+    getChatUser
 };
