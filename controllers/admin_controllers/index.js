@@ -176,8 +176,9 @@ const editProduct = async (req, res) => {
 };
 
 const getProducts = async (req,res) => {
-    const { params } = req;
+    const { params,user_data } = req;
     const { store_id } = params;
+    console.log(user_data.store_id)
     try {
         let products;
         if(store_id)
@@ -186,7 +187,15 @@ const getProducts = async (req,res) => {
         }
         else
         {
-            products = await Products.find({status:'Active'}).populate("store_id");
+            if(user_data.store_id)
+            {
+                products = await Products.find({status:'Active',store_id:user_data.store_id}).populate("store_id");
+            }
+            else
+            {
+                products = await Products.find({status:'Active'}).populate("store_id");
+            }
+            
         }
         
         return res.status(200).json({message:"Products",products})
