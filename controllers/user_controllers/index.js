@@ -27,7 +27,7 @@ const updateProfile = async (req,res) => {
 
 const orderRequest = async (req,res) => {
     const {body, user_id} = req
-    const {product_id,quantity,date,delivery_type} = body
+    const {product_id,quantity,date,delivery_type,comment} = body
     try {
         const product = await Products.findById(product_id)
         if(!product)
@@ -35,7 +35,7 @@ const orderRequest = async (req,res) => {
                 return res.status(404).json({ message: "Product not found" });
             }
         const store_id = product.store_id
-        const order = await Orders.create({store_id,product_id,quantity,date,delivery_type,user_id,status:'In-Process'})
+        const order = await Orders.create({store_id,product_id,quantity,date,delivery_type,user_id,status:'In-Process',comment})
         res.status(200).json({message: "Order Requested Successfully", data: order})
         
     } catch (error) {
