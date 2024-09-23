@@ -38,6 +38,10 @@ const Orders = mongoose.model('orders', new Schema({
         required:true,
         default: 'Normal'
     },
+    comment: {
+        type: String,
+        required: false,
+    },
     status: {
         type: String,
         enum:['In-Process','Delivered','Declined'],
