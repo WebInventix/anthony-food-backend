@@ -46,8 +46,6 @@ const addStore = async (req, res) => {
   try {
     const store_data = {
       name,
-      // avatar,
-      // status,
     };
     const store_save = await Stores.create({
       ...store_data,
@@ -62,10 +60,100 @@ const addStore = async (req, res) => {
 
 const getStores = async (req, res) => {
   try {
-    const stores = await Stores.find();
+    const stores = await Stores.find({ isDeleted: false });
     return res.status(200).json({ message: "Stores", stores: stores });
   } catch (error) {
     return res.status(500).json({ message: "Error", error: error.message });
+  }
+};
+
+const updateStore = async (req, res) => {
+  const { storeId } = req.params;
+  const { body, user_data } = req;
+  const { name, status } = body;
+
+  // Ensure user is an Admin
+  if (user_data.role !== "Admin") {
+    return res.status(401).json({ message: "Not Authorized" });
+  }
+
+  try {
+    // Update the store
+    const store_update = await Stores.findByIdAndUpdate(
+      storeId,
+      { name, status },
+      { new: true } // Return the updated document
+    );
+
+    if (!store_update) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
+    return res.status(200).json({
+      message: "Store updated successfully",
+      store: store_update,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
+const deleteStore = async (req, res) => {
+  const { storeId } = req.params;
+  const { user_data } = req;
+
+  // Ensure user is an Admin
+  if (user_data.role !== "Admin") {
+    return res.status(401).json({ message: "Not Authorized" });
+  }
+
+  try {
+    // Mark the store as deleted
+    const store_delete = await Stores.findByIdAndUpdate(
+      storeId,
+      { isDeleted: true },
+      { new: true } // Return the updated document
+    );
+
+    if (!store_delete) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
+    return res.status(200).json({
+      message: "Store deleted successfully",
+      store: store_delete,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
+const getStoreById = async (req, res) => {
+  const { storeId } = req.params;
+
+  try {
+    // Find store by ID
+    const store = await Stores.findOne({ _id: storeId, isDeleted: false });
+
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
+    return res.status(200).json({
+      message: "Store retrieved successfully",
+      store: store,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error",
+      error: error.message,
+    });
   }
 };
 
@@ -243,4 +331,7 @@ module.exports = {
   deleteProduct,
   adminDashboard,
   updateProducts,
+  updateStore,
+  deleteStore,
+  getStoreById,
 };

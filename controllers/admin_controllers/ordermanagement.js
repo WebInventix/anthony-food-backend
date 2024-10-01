@@ -54,9 +54,9 @@ const viewOrders = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   const { body, user_id } = req;
-  const { order_id, status, vendor_id } = body;
+  const { order_id, status, vendor_id, store_id } = body;
   try {
-    let newData = { status, vendor_id };
+    let newData = { status, vendor_id, store_id };
     const updatedata = { ...newData };
     const update = await Orders.findByIdAndUpdate(
       order_id,

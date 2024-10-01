@@ -19,6 +19,10 @@ const Stores = mongoose.model(
         // required:true,
         default: "Active",
       },
+      isDeleted: {
+        type: Boolean,
+        default: false,
+      },
     },
     { timestamps: true }
   )
