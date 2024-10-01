@@ -36,7 +36,7 @@ const generateUniquePid = () => {
 };
 
 const addStore = async (req, res) => {
-  const { body, user_data, user_id } = req;
+  const { body, user_data } = req;
   const { name, avatar, status } = body;
 
   if (!user_data.role == "Admin") {
@@ -46,10 +46,9 @@ const addStore = async (req, res) => {
   try {
     const store_data = {
       name,
-      avatar,
-      status,
+      // avatar,
+      // status,
     };
-    // return res.json({msg:true})
     const store_save = await Stores.create({
       ...store_data,
     });
@@ -161,6 +160,18 @@ const editProduct = async (req, res) => {
   }
 };
 
+const updateProducts = async (req, res) => {
+  try {
+    const result = await Products.updateMany(
+      {},
+      { $set: { status: "Active" } }
+    );
+    return res.status(200).json({ message: "Products" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error", error: error.message });
+  }
+};
+
 const getProducts = async (req, res) => {
   const { params, user_data } = req;
   const { store_id } = params;
@@ -176,6 +187,7 @@ const getProducts = async (req, res) => {
       if (user_data.store_id) {
         products = await Products.find({
           store_id: user_data.store_id,
+          status: { $ne: "In-Active" },
         }).populate("store_id");
       } else {
         products = await Products.find({
@@ -230,4 +242,5 @@ module.exports = {
   singleProduct,
   deleteProduct,
   adminDashboard,
+  updateProducts,
 };

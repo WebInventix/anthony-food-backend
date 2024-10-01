@@ -1,27 +1,27 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
-const Stores = mongoose.model('stores', new Schema({
-    name: {
+const Stores = mongoose.model(
+  "stores",
+  new Schema(
+    {
+      name: {
         type: String,
-        required: true
-    },
-    avatar: {
+        required: true,
+      },
+      avatar: {
         type: String,
         required: false,
-
-    },
-    status: {
+      },
+      status: {
         type: String,
-        enum:['Active','In-Active'],
-        required:true,
-        default: 'Active'
-    }
+        enum: ["Active", "In-Active"],
+        // required:true,
+        default: "Active",
+      },
+    },
+    { timestamps: true }
+  )
+);
 
-
-          
-}, { timestamps: true }
-))
-
-
-module.exports = { Stores }
+module.exports = { Stores };
