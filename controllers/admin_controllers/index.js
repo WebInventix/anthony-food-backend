@@ -170,18 +170,17 @@ const getProducts = async (req, res) => {
     if (store_id) {
       products = await Products.find({
         store_id: store_id,
-        status: "Active",
+        status: { $ne: "In-Active" },
       }).populate("store_id");
     } else {
       if (user_data.store_id) {
         products = await Products.find({
           store_id: user_data.store_id,
-          status: "Active",
         }).populate("store_id");
       } else {
-        products = await Products.find({ status: "Active" }).populate(
-          "store_id"
-        );
+        products = await Products.find({
+          status: { $ne: "In-Active" },
+        }).populate("store_id");
       }
     }
 
