@@ -1,58 +1,59 @@
-const { required } = require('joi');
-const mongoose = require('mongoose');
+const { required } = require("joi");
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
-const Orders = mongoose.model('orders', new Schema({
-    product_id: {
+const Orders = mongoose.model(
+  "orders",
+  new Schema(
+    {
+      product_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'products',
+        ref: "products",
         required: true,
-    },
-    store_id: {
+      },
+      store_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'stores',
+        ref: "stores",
         required: true,
-    },
-    user_id: {
+      },
+      user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: "user",
         required: true,
-    },
-    vendor_id: {
+      },
+      vendor_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'vendors',
-        required:false,
-        default:null,
-    },
-    quantity: {
+        ref: "vendors",
+        required: false,
+        default: null,
+      },
+      quantity: {
         type: String,
         required: true,
-    },
-    date:{
+      },
+      date: {
         type: Date,
-        required:true
-    },
-    delivery_type: {
+        required: true,
+      },
+      delivery_type: {
         type: String,
-        enum:['Urgent','Normal'],
-        required:true,
-        default: 'Normal'
-    },
-    comment: {
+        enum: ["Urgent", "Normal"],
+        required: true,
+        default: "Normal",
+      },
+      comment: {
         type: String,
         required: false,
-    },
-    status: {
+      },
+      status: {
         type: String,
-        enum:['In-Process','Delivered','Declined'],
-        required:true,
-        default: 'In-Process'
-    }
+        enum: ["Unavailable", "Ordered", "Change-quantity"],
+        required: true,
+        default: "Ordered",
+      },
+    },
+    { timestamps: true }
+  )
+);
 
-
-          
-}, { timestamps: true }
-))
-
-
-module.exports = { Orders }
+module.exports = { Orders };
