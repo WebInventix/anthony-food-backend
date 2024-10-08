@@ -32,6 +32,7 @@ const {
   getAdminOrders,
   viewOrders,
   updateOrder,
+  updateMultipleOrders,
 } = require("../../controllers/admin_controllers/ordermanagement");
 const router = express.Router();
 
@@ -62,6 +63,7 @@ router.get("/get-admin-orders/:store", getAdminOrders);
 router.get("/get-admin-orders/:store/:vendor", getAdminOrders);
 router.get("/view-order/:order", viewOrders);
 router.post("/update-order", updateOrder);
+router.put("/update-multiple-orders", updateMultipleOrders);
 router.get("/admin-dashboard/:store_id", adminDashboard);
 router.get("/get-admin", getAdmin);
 router.get("/get-chat-users", getChatUser);

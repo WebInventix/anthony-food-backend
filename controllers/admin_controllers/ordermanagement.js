@@ -73,8 +73,40 @@ const updateOrder = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+const updateMultipleOrders = async (req, res) => {
+  const { body } = req;
+  const { order_ids, vendor_id } = body;
+
+  if (!Array.isArray(order_ids) || order_ids.length === 0) {
+    return res
+      .status(400)
+      .json({ message: "Order IDs should be a non-empty array" });
+  }
+
+  try {
+    const update = await Orders.updateMany(
+      { _id: { $in: order_ids } },
+      { $set: { vendor_id } },
+      { new: true, runValidators: true }
+    );
+
+    if (update.matchedCount === 0) {
+      return res.status(404).json({ message: "No Orders Found" });
+    }
+
+    return res.status(200).json({
+      message: `Updated ${update.modifiedCount} orders successfully`,
+      data: update,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAdminOrders,
   viewOrders,
   updateOrder,
+  updateMultipleOrders,
 };
