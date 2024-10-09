@@ -56,7 +56,11 @@ const updateOrder = async (req, res) => {
   const { body, user_id } = req;
   const { order_id, status, vendor_id, store_id, quantity } = body;
   try {
-    let newData = { status, vendor_id, store_id, quantity };
+    let newData = {};
+    if (body.status !== undefined) newData.status = body.status;
+    if (body.vendor_id !== undefined) newData.vendor_id = body.vendor_id;
+    if (body.store_id !== undefined) newData.store_id = body.store_id;
+    if (body.quantity !== undefined) newData.quantity = body.quantity;
     const updatedata = { ...newData };
     const update = await Orders.findByIdAndUpdate(
       order_id,
