@@ -54,9 +54,9 @@ const viewOrders = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   const { body, user_id } = req;
-  const { order_id, status, vendor_id, store_id } = body;
+  const { order_id, status, vendor_id, store_id, quantity } = body;
   try {
-    let newData = { status, vendor_id, store_id };
+    let newData = { status, vendor_id, store_id, quantity };
     const updatedata = { ...newData };
     const update = await Orders.findByIdAndUpdate(
       order_id,
@@ -96,8 +96,9 @@ const updateMultipleOrders = async (req, res) => {
     }
 
     return res.status(200).json({
+      status: "success",
       message: `Updated ${update.modifiedCount} orders successfully`,
-      data: update,
+      // data: update,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
