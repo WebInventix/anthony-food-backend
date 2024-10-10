@@ -7,7 +7,7 @@ const { sendVendorEmail } = require("../../utils/email");
 const getAdminOrders = async (req, res) => {
   const { body, params } = req;
   const { store, vendor } = params;
-  console.log(params);
+  // console.log(params);
   try {
     var orders;
     if (store && vendor) {
@@ -26,7 +26,7 @@ const getAdminOrders = async (req, res) => {
         .populate("user_id")
         .populate("vendor_id");
     }
-    console.log("------>", orders);
+    // console.log("------>", orders);
     return res.status(200).json({ message: "All Orders", orders: orders });
   } catch (error) {
     return res
@@ -38,7 +38,7 @@ const viewOrders = async (req, res) => {
   const { body, params } = req;
   const { order } = params;
   try {
-    console.log(order);
+    // console.log(order);
     const viewOrder = await Orders.findById(order)
       .populate("product_id")
       .populate("store_id")
