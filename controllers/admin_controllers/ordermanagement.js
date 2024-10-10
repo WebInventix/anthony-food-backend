@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { Vendors } = require("../../models/vendors");
 const { Orders } = require("../../models/orders");
 const { Products } = require("../../models/products");
+const { sendVendorEmail } = require("../../utils/email");
 
 const getAdminOrders = async (req, res) => {
   const { body, params } = req;
@@ -70,6 +71,20 @@ const updateOrder = async (req, res) => {
     if (!update) {
       return res.status(404).json({ message: "Order Not Found" });
     }
+
+    if (vendor_id) {
+      const vendor = await Vendors.findById(vendor_id);
+      if (!vendor) {
+        return res.status(404).json({ message: "Vendor not found" });
+      }
+
+      // Send email to the vendor
+      const emailMessage = `Dear ${vendor.name}, your vendor ID (${vendor_id}) has been assigned to Order ID: ${order_id}. Please review the updated details.`;
+      await sendVendorEmail(vendor.email, emailMessage);
+
+      console.log(`Email sent to vendor: ${vendor.email}`);
+    }
+
     return res
       .status(200)
       .json({ message: "Order Updated Successfully", data: update });
@@ -78,6 +93,36 @@ const updateOrder = async (req, res) => {
   }
 };
 
+// const updateMultipleOrders = async (req, res) => {
+//   const { body } = req;
+//   const { order_ids, vendor_id } = body;
+
+//   if (!Array.isArray(order_ids) || order_ids.length === 0) {
+//     return res
+//       .status(400)
+//       .json({ message: "Order IDs should be a non-empty array" });
+//   }
+
+//   try {
+//     const update = await Orders.updateMany(
+//       { _id: { $in: order_ids } },
+//       { $set: { vendor_id } },
+//       { new: true, runValidators: true }
+//     );
+
+//     if (update.matchedCount === 0) {
+//       return res.status(404).json({ message: "No Orders Found" });
+//     }
+
+//     return res.status(200).json({
+//       status: "success",
+//       message: `Updated ${update.modifiedCount} orders successfully`,
+//       // data: update,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
 const updateMultipleOrders = async (req, res) => {
   const { body } = req;
   const { order_ids, vendor_id } = body;
@@ -99,10 +144,19 @@ const updateMultipleOrders = async (req, res) => {
       return res.status(404).json({ message: "No Orders Found" });
     }
 
+    const vendor = await Vendors.findById(vendor_id);
+
+    if (!vendor) {
+      return res.status(404).json({ message: "Vendor not found" });
+    }
+
+    const emailMessage = `Your vendor ID (${vendor_id}) has been assigned to ${update.modifiedCount} orders.`;
+    await sendVendorEmail(vendor.email, emailMessage);
+
+    // Return success response after sending emails
     return res.status(200).json({
       status: "success",
-      message: `Updated ${update.modifiedCount} orders successfully`,
-      // data: update,
+      message: `Updated ${update.modifiedCount} orders successfully and notified vendor.`,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
