@@ -180,23 +180,29 @@ const approveUser = async (req, res) => {
 
 const addProducts = async (req, res) => {
   const { body, user_data, user_id } = req;
-  const { name, image, category, store_id } = body;
-
+  const { name, image, category, store_id,type } = body;
   if (!user_data.role == "Admin") {
     return res.status(401).json({ message: "Not Authorize" });
   }
-  if (!name || !category || !image || !store_id) {
+  if (!name || !category || !image || type=="Single") {
+    if(!store_id )
+    {
+      return res.status(400).json({message:"If Type is single you must give  store id" });
+
+    }
     return res.status(400).json({ message: "Please fill all the fields" });
   }
   try {
     const pid = generateUniquePid();
+    let st = (!store_id) ? null:store_id
     const product_data = {
       name,
       image,
       category,
-      store_id,
+      store_id:st,
       status: "Active",
       pid,
+      type
     };
     // return res.json({msg:true})
     const product_save = await Products.create({
@@ -212,7 +218,7 @@ const addProducts = async (req, res) => {
 
 const editProduct = async (req, res) => {
   const { body, params, user_data } = req;
-  const { name, image, category, store_id, status } = body;
+  const { name, image, category, store_id, status,type } = body;
   const { pid } = params;
 
   if (user_data.role !== "Admin") {
@@ -236,6 +242,7 @@ const editProduct = async (req, res) => {
     if (image) product.image = image;
     if (category) product.category = category;
     if (store_id) product.store_id = store_id;
+    if(type) product.type = type;
 
     // Save the updated product
     await product.save();
