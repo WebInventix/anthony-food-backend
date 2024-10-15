@@ -33,7 +33,7 @@ const Products = mongoose.model('products', new Schema({
     },
     type:{
         type:String,
-        enum:['Single','All'],
+        enum:['   ','All'],
         default:'Single',
         required:false
     }
