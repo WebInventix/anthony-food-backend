@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
@@ -22,6 +23,7 @@ const Vendors = mongoose.model('vendors', new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'stores',
         default:null,
+        required:false
     },
     category: {
         type: String,
@@ -37,6 +39,12 @@ const Vendors = mongoose.model('vendors', new Schema({
         type: String,
         enum:['Active','In-Active','Deleted'],
         required:true
+    },
+    type:{
+        type:String,
+        enum:['Single','All'],
+        default:'Single',
+        required:false
     }
 
 

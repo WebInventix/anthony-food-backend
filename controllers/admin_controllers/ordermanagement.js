@@ -119,6 +119,21 @@ const updateOrder = async (req, res) => {
   }
 };
 
+
+
+const getOrderByVendor = async(req,res) => {
+  const {vendor } = req.params
+  try {
+    const orders = await Orders.find({ vendor_id: vendor }).populate("store_id")
+    .populate("product_id")
+    .populate("vendor_id");
+    return res.status(200).json({ message: "Orders found", data: orders })
+    
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+    
+  }
+}
 // const updateMultipleOrders = async (req, res) => {
 //   const { body } = req;
 //   const { order_ids, vendor_id } = body;
@@ -226,4 +241,5 @@ module.exports = {
   viewOrders,
   updateOrder,
   updateMultipleOrders,
+  getOrderByVendor
 };

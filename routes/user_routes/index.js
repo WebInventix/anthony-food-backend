@@ -33,6 +33,7 @@ const {
   viewOrders,
   updateOrder,
   updateMultipleOrders,
+  getOrderByVendor
 } = require("../../controllers/admin_controllers/ordermanagement");
 const router = express.Router();
 
@@ -57,6 +58,7 @@ router.delete("/delete-user/:id", deleteUser);
 router.get("/requested-users-list/:id", requestedUser);
 router.post("/request-order", orderRequest);
 router.get("/get-my-orders", getOrders);
+router.get("/get-orders-vendors/:vendor", getOrderByVendor);
 router.post("/update-profile", updateProfile);
 router.get("/get-admin-orders", getAdminOrders);
 router.get("/get-admin-orders/:store", getAdminOrders);
