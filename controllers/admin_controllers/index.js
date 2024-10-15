@@ -184,7 +184,7 @@ const addProducts = async (req, res) => {
   if (!user_data.role == "Admin") {
     return res.status(401).json({ message: "Not Authorize" });
   }
-  if (!name || !category || !image || type=="Single") {
+  if (!name || !category || !image) {
     if(!store_id )
     {
       return res.status(400).json({message:"If Type is single you must give  store id" });
