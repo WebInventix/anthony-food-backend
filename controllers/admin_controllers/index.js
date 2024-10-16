@@ -178,41 +178,119 @@ const approveUser = async (req, res) => {
   }
 };
 
-const addProducts = async (req, res) => {
-  const { body, user_data, user_id } = req;
-  const { name, image, category, store_id,type } = body;
-  if (!user_data.role == "Admin") {
-    return res.status(401).json({ message: "Not Authorize" });
-  }
-  if (!name || !category || !image) {
-    if(!store_id )
-    {
-      return res.status(400).json({message:"If Type is single you must give  store id" });
+// const addProducts = async (req, res) => {
+//   const { body, user_data, user_id } = req;
+//   const { name, image, category, store_id,type } = body;
+//   if (!user_data.role == "Admin") {
+//     return res.status(401).json({ message: "Not Authorize" });
+//   }
+//   if (!name || !category || !image) {
+//     if(!store_id )
+//     {
+//       return res.status(400).json({message:"If Type is single you must give  store id" });
 
-    }
+//     }
+//     return res.status(400).json({ message: "Please fill all the fields" });
+//   }
+//   try {
+//     const pid = generateUniquePid();
+//     let st = (!store_id) ? null:store_id
+//     const product_data = {
+//       name,
+//       image,
+//       category,
+//       store_id:st,
+//       status: "Active",
+//       pid,
+//       type
+//     };
+//     // return res.json({msg:true})
+//     const product_save = await Products.create({
+//       ...product_data,
+//     });
+//     return res
+//       .status(200)
+//       .json({ message: "Product-Created", store: product_save });
+//   } catch (error) {
+//     return res.status(500).json({ message: "Error", error: error.message });
+//   }
+// };
+
+
+const addProducts = async (req, res) => {
+  const { body, user_data } = req;
+  const { name, image, category, store_id, type } = body;
+
+  // Check if the user is an admin
+  if (user_data.role !== "Admin") {
+    return res.status(401).json({ message: "Not Authorized" });
+  }
+
+  // Validate required fields
+  if (!name || !category || !image) {
     return res.status(400).json({ message: "Please fill all the fields" });
   }
+
+  // If type is "Single," ensure store_id is provided
+  if (type === "Single" && !store_id) {
+    return res.status(400).json({ message: "If Type is 'Single,' you must provide a store ID" });
+  }
+
   try {
     const pid = generateUniquePid();
-    let st = (!store_id) ? null:store_id
-    const product_data = {
-      name,
-      image,
-      category,
-      store_id:st,
-      status: "Active",
-      pid,
-      type
-    };
-    // return res.json({msg:true})
-    const product_save = await Products.create({
-      ...product_data,
+    const products = [];
+
+    if (type === "All") {
+      // Fetch all active stores that are not deleted
+      const stores = await Stores.find({ isDeleted: false, status: "Active" });
+
+      if (!stores || stores.length === 0) {
+        return res.status(404).json({ message: "No active stores found" });
+      }
+
+      // Create a product for each active store
+      for (const store of stores) {
+        const product_data = {
+          name,
+          image,
+          category,
+          store_id: store._id,
+          status: "Active",
+          pid,
+          type
+        };
+
+        const product_save = await Products.create(product_data);
+        products.push(product_save);
+      }
+    } else {
+      // If type is "Single," create a product for the specified store
+      const product_data = {
+        name,
+        image,
+        category,
+        store_id,
+        status: "Active",
+        pid,
+        type
+      };
+
+      const product_save = await Products.create(product_data);
+      products.push(product_save);
+    }
+
+    // Return the created products
+    return res.status(200).json({
+      message: "Product(s) Created Successfully",
+      data: products
     });
-    return res
-      .status(200)
-      .json({ message: "Product-Created", store: product_save });
+
   } catch (error) {
-    return res.status(500).json({ message: "Error", error: error.message });
+    // Handle any errors during the process
+    return res.status(500).json({
+      message: "Error creating products",
+      error: error.message
+    });
   }
 };
 
