@@ -14,16 +14,19 @@ const getAdminOrders = async (req, res) => {
       orders = await Orders.find({ store_id: store, vendor_id: vendor })
         .populate("product_id")
         .populate("user_id")
+        .populate("store_id")
         .populate("vendor_id");
     } else if (store && !vendor) {
       orders = await Orders.find({ store_id: store })
         .populate("product_id")
         .populate("user_id")
+        .populate("store_id")
         .populate("vendor_id");
     } else {
       orders = await Orders.find()
         .populate("product_id")
         .populate("user_id")
+        .populate("store_id")
         .populate("vendor_id");
     }
     // console.log("------>", orders);
