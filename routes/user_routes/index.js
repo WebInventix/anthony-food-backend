@@ -9,6 +9,8 @@ const {
   updateProducts,
   singleProduct,
   deleteProduct,
+  updateStore,
+  deleteStore,
 } = require("../../controllers/admin_controllers/index");
 const {
   addVendor,
@@ -42,6 +44,10 @@ const router = express.Router();
 // router.post('/reset-password',  resetPassword);
 
 router.post("/add-store", addStore);
+router.put("/update-store/:storeId", updateStore);
+router.post("/delete-store/:storeId", deleteStore);
+
+
 router.post("/approve-decline-user", approveUser);
 router.post("/add-product", addProducts);
 router.post("/edit-product/:pid", editProduct);

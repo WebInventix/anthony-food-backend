@@ -35,6 +35,7 @@ const generateUniquePid = () => {
   return `PID${uniqueId}`;
 };
 
+
 const addStore = async (req, res) => {
   const { body, user_data } = req;
   const { name, avatar, status } = body;
@@ -58,30 +59,34 @@ const addStore = async (req, res) => {
   }
 };
 
+
+
 const getStores = async (req, res) => {
   try {
-    const stores = await Stores.find({ isDeleted: false });
+    const stores = await Stores.find({ isDeleted: false, status: "Active" });
     return res.status(200).json({ message: "Stores", stores: stores });
   } catch (error) {
     return res.status(500).json({ message: "Error", error: error.message });
   }
 };
 
+
+
 const updateStore = async (req, res) => {
   const { storeId } = req.params;
-  const { body, user_data } = req;
-  const { name, status } = body;
+  const { name } = req.body;
+  const { user_data } = req;
 
-  // Ensure user is an Admin
+  // Ensure the user is an Admin
   if (user_data.role !== "Admin") {
     return res.status(401).json({ message: "Not Authorized" });
   }
 
   try {
-    // Update the store
+    // Update the store and return the updated document
     const store_update = await Stores.findByIdAndUpdate(
       storeId,
-      { name, status },
+      { name },
       { new: true } // Return the updated document
     );
 
@@ -95,26 +100,28 @@ const updateStore = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Error",
+      message: "Error while updating store",
       error: error.message,
     });
   }
 };
 
+
+
 const deleteStore = async (req, res) => {
   const { storeId } = req.params;
   const { user_data } = req;
 
-  // Ensure user is an Admin
+  // Ensure the user is an Admin
   if (user_data.role !== "Admin") {
     return res.status(401).json({ message: "Not Authorized" });
   }
 
   try {
-    // Mark the store as deleted
+    // Mark the store as deleted by updating the 'isDeleted' field and set status to 'Inactive'
     const store_delete = await Stores.findByIdAndUpdate(
       storeId,
-      { isDeleted: true },
+      { isDeleted: true, status: "Inactive" }, // Set status to 'Inactive' upon deletion
       { new: true } // Return the updated document
     );
 
@@ -123,16 +130,18 @@ const deleteStore = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "Store deleted successfully",
+      message: "Store deleted and marked as inactive successfully",
       store: store_delete,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Error",
+      message: "Error while deleting store",
       error: error.message,
     });
   }
 };
+
+
 
 const getStoreById = async (req, res) => {
   const { storeId } = req.params;
@@ -178,43 +187,6 @@ const approveUser = async (req, res) => {
   }
 };
 
-// const addProducts = async (req, res) => {
-//   const { body, user_data, user_id } = req;
-//   const { name, image, category, store_id,type } = body;
-//   if (!user_data.role == "Admin") {
-//     return res.status(401).json({ message: "Not Authorize" });
-//   }
-//   if (!name || !category || !image) {
-//     if(!store_id )
-//     {
-//       return res.status(400).json({message:"If Type is single you must give  store id" });
-
-//     }
-//     return res.status(400).json({ message: "Please fill all the fields" });
-//   }
-//   try {
-//     const pid = generateUniquePid();
-//     let st = (!store_id) ? null:store_id
-//     const product_data = {
-//       name,
-//       image,
-//       category,
-//       store_id:st,
-//       status: "Active",
-//       pid,
-//       type
-//     };
-//     // return res.json({msg:true})
-//     const product_save = await Products.create({
-//       ...product_data,
-//     });
-//     return res
-//       .status(200)
-//       .json({ message: "Product-Created", store: product_save });
-//   } catch (error) {
-//     return res.status(500).json({ message: "Error", error: error.message });
-//   }
-// };
 
 
 const addProducts = async (req, res) => {
@@ -296,7 +268,7 @@ const addProducts = async (req, res) => {
 
 const editProduct = async (req, res) => {
   const { body, params, user_data } = req;
-  const { name, image, category, store_id, status,type } = body;
+  const { name, image, category, store_id, status, type } = body;
   const { pid } = params;
 
   if (user_data.role !== "Admin") {
@@ -320,7 +292,7 @@ const editProduct = async (req, res) => {
     if (image) product.image = image;
     if (category) product.category = category;
     if (store_id) product.store_id = store_id;
-    if(type) product.type = type;
+    if (type) product.type = type;
 
     // Save the updated product
     await product.save();
