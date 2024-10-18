@@ -9,10 +9,13 @@ const {
   updateProducts,
   singleProduct,
   deleteProduct,
+  updateStore,
+  deleteStore,
 } = require("../../controllers/admin_controllers/index");
 const {
   addVendor,
   getVendor,
+  updateVendor,
   deleteVendor,
 } = require("../../controllers/admin_controllers/vendormanagement");
 const {
@@ -33,7 +36,7 @@ const {
   viewOrders,
   updateOrder,
   updateMultipleOrders,
-  getOrderByVendor
+  getOrderByVendor,
 } = require("../../controllers/admin_controllers/ordermanagement");
 const router = express.Router();
 
@@ -41,6 +44,10 @@ const router = express.Router();
 // router.post('/reset-password',  resetPassword);
 
 router.post("/add-store", addStore);
+router.put("/update-store/:storeId", updateStore);
+router.post("/delete-store/:storeId", deleteStore);
+
+
 router.post("/approve-decline-user", approveUser);
 router.post("/add-product", addProducts);
 router.post("/edit-product/:pid", editProduct);
@@ -51,6 +58,7 @@ router.get("/single-product/:pid", singleProduct);
 router.delete("/delete-product/:pid", deleteProduct);
 router.post("/add-vendor", addVendor);
 router.get("/get-vendor/:id", getVendor);
+router.patch("/update-vendor/:id", updateVendor);
 router.delete("/delete-vendor/:id", deleteVendor);
 router.post("/add-user", addUser);
 router.get("/get-user/:store", getUser);
