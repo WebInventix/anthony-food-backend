@@ -122,6 +122,20 @@ const getVendor = async (req, res) => {
   }
 };
 
+const getVendorDetail = async (req,res) => {
+  const { params } = req;
+  const { id } = params;
+  try {
+    const vendor = await  Vendors.findById(id).populate("store_id").populate("category").populate("allproducts");
+    return res
+      .status(200)
+      .json({ message: "Vendor Fetched Successfully", vendor });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+
 const deleteVendor = async (req, res) => {
   const { params } = req;
   const { id } = params;
@@ -165,4 +179,5 @@ module.exports = {
   getVendor,
   deleteVendor,
   updateVendor,
+  getVendorDetail
 };

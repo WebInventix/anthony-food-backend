@@ -15,6 +15,7 @@ const {
 const {
   addVendor,
   getVendor,
+  getVendorDetail,
   updateVendor,
   deleteVendor,
 } = require("../../controllers/admin_controllers/vendormanagement");
@@ -58,6 +59,7 @@ router.get("/single-product/:pid", singleProduct);
 router.delete("/delete-product/:pid", deleteProduct);
 router.post("/add-vendor", addVendor);
 router.get("/get-vendor/:id", getVendor);
+router.get("/get-vendor-detail/:id", getVendorDetail);
 router.patch("/update-vendor/:id", updateVendor);
 router.delete("/delete-vendor/:id", deleteVendor);
 router.post("/add-user", addUser);
