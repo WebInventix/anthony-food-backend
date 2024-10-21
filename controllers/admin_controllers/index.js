@@ -307,19 +307,9 @@ const getProducts = async (req, res) => {
         ],
         status: { $ne: "In-Active" },
       }).populate("store_id");
-    } else if (user_data.store_id) {
-      // Fetch products for the user's store or type is "All"
-      products = await Products.find({
-        $or: [
-          { store_id: user_data.store_id },
-          { type: "All" }
-        ],
-        status: { $ne: "In-Active" },
-      }).populate("store_id");
     } else {
       // Fallback: Fetch products with type "All" if no store_id provided
       products = await Products.find({
-        type: "All",
         status: { $ne: "In-Active" },
       }).populate("store_id");
     }
