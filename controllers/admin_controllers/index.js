@@ -210,9 +210,8 @@ const addProducts = async (req, res) => {
 
   try {
     const pid = generateUniquePid();
-    const products = [];
 
-    if (type === "All") {
+
       // Fetch all active stores that are not deleted
       const stores = await Stores.find({ isDeleted: false, status: "Active" });
 
@@ -221,7 +220,7 @@ const addProducts = async (req, res) => {
       }
 
       // Create a product for each active store
-      for (const store of stores) {
+    
         const product_data = {
           name,
           image,
@@ -233,28 +232,14 @@ const addProducts = async (req, res) => {
         };
 
         const product_save = await Products.create(product_data);
-        products.push(product_save);
-      }
-    } else {
-      // If type is "Single," create a product for the specified store
-      const product_data = {
-        name,
-        image,
-        category,
-        store_id,
-        status: "Active",
-        pid,
-        type
-      };
+ 
+   
 
-      const product_save = await Products.create(product_data);
-      products.push(product_save);
-    }
 
     // Return the created products
     return res.status(200).json({
       message: "Product(s) Created Successfully",
-      data: products
+      data: product_save
     });
 
   } catch (error) {
