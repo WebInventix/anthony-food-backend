@@ -320,25 +320,34 @@ const updateProducts = async (req, res) => {
 const getProducts = async (req, res) => {
   const { params, user_data } = req;
   const { store_id } = params;
-  console.log(user_data.store_id);
+
   try {
     let products;
+
     if (store_id) {
+      // Fetch products where either store_id matches or type is "All"
       products = await Products.find({
-        store_id: store_id,
+        $or: [
+          { store_id: store_id },
+          { type: "All" }
+        ],
+        status: { $ne: "In-Active" },
+      }).populate("store_id");
+    } else if (user_data.store_id) {
+      // Fetch products for the user's store or type is "All"
+      products = await Products.find({
+        $or: [
+          { store_id: user_data.store_id },
+          { type: "All" }
+        ],
         status: { $ne: "In-Active" },
       }).populate("store_id");
     } else {
-      if (user_data.store_id) {
-        products = await Products.find({
-          store_id: user_data.store_id,
-          status: { $ne: "In-Active" },
-        }).populate("store_id");
-      } else {
-        products = await Products.find({
-          status: { $ne: "In-Active" },
-        }).populate("store_id");
-      }
+      // Fallback: Fetch products with type "All" if no store_id provided
+      products = await Products.find({
+        type: "All",
+        status: { $ne: "In-Active" },
+      }).populate("store_id");
     }
 
     return res.status(200).json({ message: "Products", products });
