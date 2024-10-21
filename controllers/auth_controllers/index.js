@@ -8,8 +8,7 @@ const { User_Tokens_Schema } = require("../../models/user_tokens_model");
 const { generateOtp } = require("../../utils/generate_OTP");
 const {sendverficationCode, forgotOtp} = require("../../utils/email");
 const verifyEmailSchema = require("../../models/verification/verifyEmailTokenSchema");
-const twilioClient = require('../../config/twilioConfig');
-// const googleClient = require('../../config/googleConfig');
+
 
 //test
 
@@ -74,13 +73,7 @@ const register_user = async (req, res, next) => {
       ...user_dto
     };
 
-    //Twilio Code
-    // let verificationCodeStatus = await twilioClient.messages.create({
-    //     body: `Your verification code is ${verificationCode}`,
-    //     from: process.env.TWILIO_PHONE_NUMBER,
-    //     to: phonenumber
-    //   });
-    //await sendverficationCode(email,verificationCode)
+
     return res.json({
       message: "Registered successfully!",
       data: send_data,
