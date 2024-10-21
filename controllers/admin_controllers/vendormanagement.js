@@ -71,7 +71,7 @@ const addVendor = async (req, res) => {
     // Return the created vendors
     return res.status(200).json({
       message: "Vendor(s) Added Successfully",
-      data: vendors,
+      data: vendor,
     });
   } catch (error) {
     // Handle any errors during the process
