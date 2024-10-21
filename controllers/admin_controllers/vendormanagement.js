@@ -41,9 +41,7 @@ const addVendor = async (req, res) => {
       allproducts = JSON.parse(vproducts);
     }
 
-    const vendors = [];
 
-    if (type === "All" && !store_id) {
       // Fetch all active stores that are not deleted
       const stores = await Stores.find({ isDeleted: false, status: "Active" });
 
@@ -52,13 +50,13 @@ const addVendor = async (req, res) => {
       }
 
       // Create a vendor for each active store
-      for (const store of stores) {
+     
         const vendor = new Vendors({
           name,
           email,
           phonenumber,
           avatar,
-          store_id: store._id,
+          store_id: store_id,
           category,
           status: "Active",
           allproducts,
@@ -66,27 +64,9 @@ const addVendor = async (req, res) => {
         });
 
         await vendor.save();
-        vendors.push(vendor);
-      }
-    } else {
-      // If type is "Single" or a specific store_id is provided
-      const st = store_id || null;
-
-      const vendor = new Vendors({
-        name,
-        email,
-        phonenumber,
-        avatar,
-        store_id: st,
-        category,
-        status: "Active",
-        allproducts,
-        type,
-      });
-
-      await vendor.save();
-      vendors.push(vendor);
-    }
+    
+    
+     
 
     // Return the created vendors
     return res.status(200).json({
