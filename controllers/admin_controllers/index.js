@@ -298,21 +298,12 @@ const getProducts = async (req, res) => {
   try {
     let products;
 
-    if (store_id) {
-      // Fetch products where either store_id matches or type is "All"
-      products = await Products.find({
-        $or: [
-          { store_id: store_id },
-          { type: "All" }
-        ],
-        status: { $ne: "In-Active" },
-      }).populate("store_id");
-    } else {
+  
       // Fallback: Fetch products with type "All" if no store_id provided
       products = await Products.find({
         status: { $ne: "In-Active" },
       }).populate("store_id");
-    }
+    
 
     return res.status(200).json({ message: "Products", products });
   } catch (error) {
