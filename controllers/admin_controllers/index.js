@@ -203,21 +203,10 @@ const addProducts = async (req, res) => {
     return res.status(400).json({ message: "Please fill all the fields" });
   }
 
-  // If type is "Single," ensure store_id is provided
-  if (type === "Single" && !store_id) {
-    return res.status(400).json({ message: "If Type is 'Single,' you must provide a store ID" });
-  }
+  
 
   try {
     const pid = generateUniquePid();
-
-
-      // Fetch all active stores that are not deleted
-      const stores = await Stores.find({ isDeleted: false, status: "Active" });
-
-      if (!stores || stores.length === 0) {
-        return res.status(404).json({ message: "No active stores found" });
-      }
 
       // Create a product for each active store
     
@@ -225,7 +214,7 @@ const addProducts = async (req, res) => {
           name,
           image,
           category,
-          store_id: store._id,
+          store_id: store_id,
           status: "Active",
           pid,
           type

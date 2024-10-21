@@ -42,12 +42,7 @@ const addVendor = async (req, res) => {
     }
 
 
-      // Fetch all active stores that are not deleted
-      const stores = await Stores.find({ isDeleted: false, status: "Active" });
-
-      if (!stores || stores.length === 0) {
-        return res.status(404).json({ message: "No active stores found" });
-      }
+ 
 
       // Create a vendor for each active store
      
