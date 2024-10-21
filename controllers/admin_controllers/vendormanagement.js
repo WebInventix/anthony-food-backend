@@ -81,13 +81,27 @@ const getVendor = async (req, res) => {
   const { params } = req;
   const { id } = params;
   try {
-    const vendor = await Vendors.find({
-      $or: [{ store_id: id }, { type: "All" }],
-      status: { $ne: "Deleted" },
-    })
-      .populate("store_id")
-      .populate("category")
-      .populate("allproducts");
+    var vendor;
+    if(id)
+    {
+      vendor = await Vendors.find({
+        $or: [{ store_id: id }, { type: "All" }],
+        status: { $ne: "Deleted" },
+      })
+        .populate("store_id")
+        .populate("category")
+        .populate("allproducts");
+    }
+    else
+    {
+      vendor = await Vendors.find({
+        status: { $ne: "Deleted" },
+      })
+        .populate("store_id")
+        .populate("category")
+        .populate("allproducts");
+    }
+    
 
     return res
       .status(200)
