@@ -209,7 +209,7 @@ const addProducts = async (req, res) => {
     const pid = generateUniquePid();
 
       // Create a product for each active store
-    
+        
         const product_data = {
           name,
           image,
