@@ -3,7 +3,7 @@ class User_DTO{
         this._id = user._id;
         this.email = user.email;
         this.role = user.role;
-        user.store_id ? this.store_id = user.store_id:this.store_id=null ;
+        this.store_id = user.store_id ? user.store_id: null 
         this.approved_status= user.approved_status;
     }
 }
