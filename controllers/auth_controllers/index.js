@@ -129,6 +129,7 @@ const login_user = async (req, res, next) => {
       return next(validation_error);
     }
     const find_user = await User_Auth_Schema.findOne({ email }).populate('store_id');
+    console.log(find_user)
     if (!find_user) {
       const error = {
         status: 401,

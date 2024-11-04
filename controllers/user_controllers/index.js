@@ -32,7 +32,7 @@ const orderRequest = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    const store_id = product.store_id;
+    const store_id = product.store_id ? product.store_id: null;
     const order = await Orders.create({
       store_id,
       product_id,
