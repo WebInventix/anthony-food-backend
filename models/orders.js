@@ -14,7 +14,7 @@ const Orders = mongoose.model(
       store_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "stores",
-        required: true,
+        required: false,
       },
       user_id: {
         type: mongoose.Schema.Types.ObjectId,
