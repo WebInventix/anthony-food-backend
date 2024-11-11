@@ -291,6 +291,25 @@ const updateProducts = async (req, res) => {
   }
 };
 
+// const getProducts = async (req, res) => {
+//   const { params, user_data } = req;
+//   const { store_id } = params;
+
+//   try {
+//     let products;
+
+  
+//       // Fallback: Fetch products with type "All" if no store_id provided
+//       products = await Products.find({
+//         status: { $ne: "In-Active" },
+//       }).populate("store_id");
+    
+
+//     return res.status(200).json({ message: "Products", products });
+//   } catch (error) {
+//     return res.status(500).json({ message: "Error", error: error.message });
+//   }
+// };
 const getProducts = async (req, res) => {
   const { params, user_data } = req;
   const { store_id } = params;
@@ -298,19 +317,18 @@ const getProducts = async (req, res) => {
   try {
     let products;
 
-  
-      // Fallback: Fetch products with type "All" if no store_id provided
-      products = await Products.find({
-        status: { $ne: "In-Active" },
-      }).populate("store_id");
-    
+    // Fetch products and sort by name in ascending (alphabetical) order
+    products = await Products.find({
+      status: { $ne: "In-Active" },
+    })
+    .populate("store_id")
+    .sort({ name: 1 }); // 1 for ascending order
 
     return res.status(200).json({ message: "Products", products });
   } catch (error) {
     return res.status(500).json({ message: "Error", error: error.message });
   }
 };
-
 const singleProduct = async (req, res) => {
   const { body, params, user_data } = req;
   const { pid } = params;
