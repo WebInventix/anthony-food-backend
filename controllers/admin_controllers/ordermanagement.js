@@ -5,32 +5,32 @@ const { Products } = require("../../models/products");
 const { sendVendorEmail } = require("../../utils/email");
 
 const getAdminOrders = async (req, res) => {
-  const { body, params } = req;
+  const { params } = req;
   const { store, vendor } = params;
-  // console.log(params);
+
   try {
-    var orders;
+    let query = {};
+
     if (store && vendor) {
-      orders = await Orders.find({ store_id: store, vendor_id: vendor })
-        .populate("product_id")
-        .populate("user_id")
-        .populate("store_id")
-        .populate("vendor_id");
+      query = {
+        $and: [
+          { vendor_id: vendor },
+          { $or: [{ store_id: store }, { store_id: null }] },
+        ],
+      };
     } else if (store && !vendor) {
-      orders = await Orders.find({ store_id: store })
-        .populate("product_id")
-        .populate("user_id")
-        .populate("store_id")
-        .populate("vendor_id");
-    } else {
-      orders = await Orders.find()
-        .populate("product_id")
-        .populate("user_id")
-        .populate("store_id")
-        .populate("vendor_id");
+      query = {
+        $or: [{ store_id: store }, { store_id: null }],
+      };
     }
-    // console.log("------>", orders);
-    return res.status(200).json({ message: "All Orders", orders: orders });
+
+    const orders = await Orders.find(query)
+      .populate("product_id")
+      .populate("user_id")
+      .populate("store_id")
+      .populate("vendor_id");
+
+    return res.status(200).json({ message: "All Orders", orders });
   } catch (error) {
     return res
       .status(500)
