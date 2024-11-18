@@ -37,9 +37,9 @@ const Orders = mongoose.model(
       },
       delivery_type: {
         type: String,
-        enum: ["Urgent", "Normal"],
+        enum: ["Urgent", "Normal",null],
         required: true,
-        default: "Normal",
+        default: null,
       },
       comment: {
         type: String,
