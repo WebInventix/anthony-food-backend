@@ -239,10 +239,35 @@ const updateMultipleOrders = async (req, res) => {
   }
 };
 
+
+
+const deleteMultipleOrders = async (req, res) => {
+  const { ids } = req.body; // Array of order IDs to delete
+
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({
+      message: "Invalid input. Please provide an array of order IDs.",
+    });
+  }
+
+  try {
+    const result = await Orders.deleteMany({ _id: { $in: ids } });
+
+    return res.status(200).json({
+      message: `${result.deletedCount} orders deleted successfully.`,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "System Error",
+      error: error.message,
+    });
+  }
+};
 module.exports = {
   getAdminOrders,
   viewOrders,
   updateOrder,
   updateMultipleOrders,
-  getOrderByVendor
+  getOrderByVendor,
+  deleteMultipleOrders
 };
