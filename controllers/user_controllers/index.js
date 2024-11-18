@@ -33,12 +33,13 @@ const orderRequest = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
     const store_id = product.store_id ? product.store_id: null;
+    let delivery_type_get = !delivery_type ? null : delivery_type 
     const order = await Orders.create({
       store_id,
       product_id,
       quantity,
       date,
-      delivery_type,
+      delivery_type:delivery_type_get,
       user_id,
       status: "Ordered",
       comment,
