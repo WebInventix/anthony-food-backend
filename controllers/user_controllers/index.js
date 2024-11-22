@@ -26,13 +26,13 @@ const updateProfile = async (req, res) => {
 
 const orderRequest = async (req, res) => {
   const { body, user_id } = req;
-  const { product_id, quantity, date, delivery_type, comment } = body;
+  const { product_id, quantity, date, delivery_type, comment ,store_id} = body;
   try {
     const product = await Products.findById(product_id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    const store_id = product.store_id ? product.store_id: null;
+    // const store_id = product.store_id ? product.store_id: null;
     // let delivery_type_get = !delivery_type ? null : delivery_type 
     const order = await Orders.create({
       store_id,
