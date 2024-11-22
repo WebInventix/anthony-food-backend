@@ -13,14 +13,12 @@ const getAdminOrders = async (req, res) => {
 
     if (store && vendor) {
       query = {
-        $and: [
-          { vendor_id: vendor },
-          { $or: [{ store_id: store }, { store_id: null }] },
-        ],
+        vendor_id:vendor,
+        store_id:store
       };
     } else if (store && !vendor) {
       query = {
-        $or: [{ store_id: store }, { store_id: null }],
+       store_id:store
       };
     }
 
