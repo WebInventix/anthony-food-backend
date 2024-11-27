@@ -52,6 +52,41 @@ const orderRequest = async (req, res) => {
   }
 };
 
+const orderRequestMUltiple = async (req, res) => {
+  const {user_id} = req
+  const {order} = req.body
+
+  try {
+    console.log(order)
+    if(order && order.length > 0){
+      const orders = await Promise.all(order.map(async (item) => {
+        const product = await Products.findById(item.product_id)
+        if (!product) {
+          return res.status(404).json({ message: "Product not found" });
+          }
+          const order = await Orders.create({
+            store_id: item.store_id,
+            product_id: item.product_id,
+            quantity: item.quantity,
+            date: item.date,
+            delivery_type: item.delivery_type,
+            user_id: user_id,
+            status: "Ordered",
+            comment: item.comment
+          })
+    }
+  ))
+  res.status(200).json({ message: "Order Requested Successfully", data: orders });
+} else {
+  return res.status(400).json({ message: "Invalid request" });
+}
+
+  } catch (error) {
+    return res.status(500).json({ message: error.message})
+    
+  }
+}
+
 const getOrders = async (req, res) => {
   const { body, user_id } = req;
   try {
@@ -91,6 +126,7 @@ module.exports = {
   orderRequest,
   getOrders,
   getAdmin,
+  orderRequestMUltiple
 };
 
 
