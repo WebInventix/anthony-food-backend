@@ -54,13 +54,17 @@ const orderRequest = async (req, res) => {
 
 const orderRequestMUltiple = async (req, res) => {
   const {user_id} = req
-  const {order} = req.body
-
+  const order = req.body
+//   console.log(req.body)
+// return res.status(200).json({data:req.body})
   try {
-    console.log(order)
+    let all_order = [];
+    // console.log(order)
     if(order && order.length > 0){
       const orders = await Promise.all(order.map(async (item) => {
+        
         const product = await Products.findById(item.product_id)
+        // console.log(product)
         if (!product) {
           return res.status(404).json({ message: "Product not found" });
           }
@@ -74,13 +78,13 @@ const orderRequestMUltiple = async (req, res) => {
             status: "Ordered",
             comment: item.comment
           })
+          all_order.push(order)
     }
   ))
-  res.status(200).json({ message: "Order Requested Successfully", data: orders });
+  res.status(200).json({ message: "Order Requested Successfully", data: all_order });
 } else {
   return res.status(400).json({ message: "Invalid request" });
 }
-
   } catch (error) {
     return res.status(500).json({ message: error.message})
     
