@@ -28,6 +28,7 @@ const {
 } = require("../../controllers/admin_controllers/usermanagement");
 const {
   orderRequest,
+  orderRequestMUltiple,
   getOrders,
   updateProfile,
   getAdmin,
@@ -69,6 +70,7 @@ router.get("/get-user/:store", getUser);
 router.delete("/delete-user/:id", deleteUser);
 router.get("/requested-users-list/:id", requestedUser);
 router.post("/request-order", orderRequest);
+router.post("/request-order-multiple",orderRequestMUltiple )
 router.get("/get-my-orders", getOrders);
 router.get("/get-orders-vendors/:vendor", getOrderByVendor);
 router.post("/update-profile", updateProfile);
