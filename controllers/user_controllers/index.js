@@ -98,8 +98,11 @@ const getOrders = async (req, res) => {
     const orders = await Orders.find({ user_id: user_id })
       .populate("store_id")
       .populate("product_id")
-      .populate("vendor_id");
+      .populate("vendor_id")
+      .sort({ "product_id.createdAt": -1 }); 
+
     let data = { allorders: orders, vegetables: [], fruits: [] };
+
     orders.map((or) => {
       if (or.product_id.category === "Vegetables") {
         data.vegetables.push(or);
@@ -107,6 +110,7 @@ const getOrders = async (req, res) => {
         data.fruits.push(or);
       }
     });
+
     return res
       .status(200)
       .json({ message: "Orders Retrieved Successfully", data: data });
@@ -114,6 +118,32 @@ const getOrders = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
+
+// const getOrders = async (req, res) => {
+//   const { body, user_id } = req;
+//   try {
+//     console.log(user_id);
+//     const orders = await Orders.find({ user_id: user_id })
+//       .populate("store_id")
+//       .populate("product_id")
+//       .populate("vendor_id");
+//     let data = { allorders: orders, vegetables: [], fruits: [] };
+//     orders.map((or) => {
+//       if (or.product_id.category === "Vegetables") {
+//         data.vegetables.push(or);
+//       } else {
+//         data.fruits.push(or);
+//       }
+//     });
+//     return res
+//       .status(200)
+//       .json({ message: "Orders Retrieved Successfully", data: data });
+//   } catch (error) {
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
 
 const getAdmin = async (req, res) => {
   const admin = await User_Auth_Schema.findOne({ role: "Admin" }).select(
