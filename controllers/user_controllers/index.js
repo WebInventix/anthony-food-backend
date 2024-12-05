@@ -94,8 +94,8 @@ const orderRequestMUltiple = async (req, res) => {
 const getOrders = async (req, res) => {
   const { body, user_id } = req;
   try {
-    console.log(user_id);
-    const orders = await Orders.find({ user_id: user_id })
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const orders = await Orders.find({ user_id: user_id,"product_id.createdAt": { $gte: twentyFourHoursAgo }, })
       .populate("store_id")
       .populate("product_id")
       .populate("vendor_id")
