@@ -95,11 +95,11 @@ const getOrders = async (req, res) => {
   const { body, user_id } = req;
   try {
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const orders = await Orders.find({ user_id: user_id,"product_id.createdAt": { $gte: twentyFourHoursAgo }, })
+    const orders = await Orders.find({ user_id: user_id,createdAt: { $gte: twentyFourHoursAgo }, })
       .populate("store_id")
       .populate("product_id")
       .populate("vendor_id")
-      .sort({ "product_id.createdAt": -1 }); 
+      .sort({ createdAt: -1 }); 
 
     let data = { allorders: orders, vegetables: [], fruits: [] };
 
